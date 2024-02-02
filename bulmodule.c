@@ -26,11 +26,7 @@ static PyObject *bul_add_target(PyObject *self, PyObject *args) {
         bul_usage_t usage = BUL_EXE;
         bul_id_t id = UINT_MAX;
 
-        if(!PyArg_ParseTuple(args, "s", &name)) {
-                return NULL;
-        }
-
-        if(!PyArg_ParseTuple(args, "I", &usage)) {
+        if(!PyArg_ParseTuple(args, "sI", &name, &usage)) {
                 return NULL;
         }
 
