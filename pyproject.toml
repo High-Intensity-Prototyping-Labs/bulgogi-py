@@ -3,5 +3,22 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bulgogi"
+name = "bulgogi_amellalalex"
 version = "0.0.2"
+authors = [
+        { name="Alex Amellal", email="bulgogi@alexamellal.com" },
+]
+description="A flexible build system assistant."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+        "Development Status :: 2 - Pre-Alpha"
+        "Programming Language :: C",
+        "Intended Audience :: Developers"
+        "Operating System :: MacOS"
+        "Topic :: Software Development :: Build Tools"
+]
+
+[project.urls]
+Homepage = "https://bulgogi.dev"
+Issues = "https://github.com/high-intensity-prototyping-labs/bulgogi-py/issues"
