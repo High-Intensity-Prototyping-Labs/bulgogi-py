@@ -21,9 +21,28 @@ static PyObject *bul_init(PyObject *self, PyObject *args) {
         return Py_None;
 }
 
+static PyObject *bul_add_target(PyObject *self, PyObject *args) {
+        bul_name_t name = NULL;
+        bul_usage_t usage = BUL_EXE;
+        bul_id_t id = UINT_MAX;
+
+        if(!PyArg_ParseTuple(args, "s", &name)) {
+                return NULL;
+        }
+
+        if(!PyArg_ParseTuple(args, "I", &usage)) {
+                return NULL;
+        }
+
+        bul_dot_add_target(name, usage);
+
+        return PyLong_FromUnsignedLong(id);
+}
+
 static PyMethodDef BulMethods[] = {
         {"system", bul_system, METH_VARARGS, "Execute a shell command."},
         {"init", bul_init, METH_NOARGS, "Initializes the bulgogi project directory."},
+        {"add_target", bul_add_target, METH_VARARGS, "Adds a target to the project and returns its ID."},
         {NULL, NULL, 0, NULL},
 };
 
