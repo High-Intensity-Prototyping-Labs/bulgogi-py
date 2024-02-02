@@ -1,27 +1,19 @@
 from setuptools import Extension, setup 
+from setuptools.command.build_ext import build_ext
+from os import system
 
-from contextlib import suppress 
-from pathlib import Path 
-from setuptools import Command 
-from setuptools.command.build import build 
+def Make():
+    system('make -C bulgogi lib/libyaml.a')
 
-class MakeCommand(Command):
-    def initialize_options(self) -> None:
-        self.bdist_dir = None 
-
-    def finalize_options(self) -> None:
-        with suppress(Exception):
-            self.bdist_dir = Path(self.get_finalized_command("bdist_wheel").bdist_dir)
-
+class MakeBuildExt(build_ext):
     def run(self) -> None:
-        if self.bdist_dir:
-            print("self.bdist_dir was successfully found!")
-
-class MakeBuild(build):
-    sub_commands = [('build_custom', None)] + build.sub_commands
+        Make()
+        super().run()
 
 setup(
-    cmdclass={'build': MakeBuild, 'build_custom': MakeCommand},
+    cmdclass={
+        'build_ext': MakeBuildExt,
+    },
     ext_modules=[
         Extension(
             name="bulgogi",
@@ -33,6 +25,8 @@ setup(
                 "bulgogi/src/yaml_ext.c",
             ],
             include_dirs=["bulgogi/inc"],
+            library_dirs=["bulgogi/lib"],
+            libraries=["yaml"],
         ),
     ]
 )
