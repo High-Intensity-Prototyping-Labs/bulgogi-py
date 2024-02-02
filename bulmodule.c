@@ -30,7 +30,7 @@ static PyObject *bul_add_target(PyObject *self, PyObject *args) {
                 return NULL;
         }
 
-        bul_dot_add_target(name, usage);
+        id = bul_dot_add_target(name, usage);
 
         return PyLong_FromUnsignedLong(id);
 }
