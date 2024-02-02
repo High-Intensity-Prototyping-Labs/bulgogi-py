@@ -1,7 +1,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-static PyObject *spam_system(PyObject *self, PyObject *args) {
+static PyObject *bul_system(PyObject *self, PyObject *args) {
         const char *command;
         int sts;
 
@@ -12,19 +12,19 @@ static PyObject *spam_system(PyObject *self, PyObject *args) {
         return PyLong_FromLong(sts);
 }
 
-static PyMethodDef SpamMethods[] = {
-        {"system", spam_system, METH_VARARGS, "Execute a shell command."},
+static PyMethodDef BulMethods[] = {
+        {"system", bul_system, METH_VARARGS, "Execute a shell command."},
         {NULL, NULL, 0, NULL},
 };
 
-static struct PyModuleDef spammodule = {
+static struct PyModuleDef bulmodule = {
         PyModuleDef_HEAD_INIT,
-        "spam",
+        "bulgogi",
         NULL, /* module doc */
         -1,
-        SpamMethods,
+        BulMethods,
 };
 
-PyMODINIT_FUNC PyInit_spam(void) {
-        return PyModule_Create(&spammodule);
+PyMODINIT_FUNC PyInit_bulgogi(void) {
+        return PyModule_Create(&bulmodule);
 }
