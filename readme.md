@@ -5,6 +5,16 @@ The Python interface for [bulgogi](https://github.com/high-intensity-prototyping
 1. Rather than write a CLI from scratch, using a scripting language _as the interface_ seemed cool and appropriate for this project.
 2. Build configurations are slow-changing and repititious, making scripts ideal for the job.
 
+## Build dependencies 
+The following system dependencies are required:
+- git 
+- gcc
+- python3
+  - pip
+  - build 
+- python3-devel
+- make
+
 ## Usage
 To get started, install bulgogi using pip:
 ```
