@@ -9,11 +9,14 @@ The Python interface for [bulgogi](https://github.com/high-intensity-prototyping
 The following system dependencies are required:
 - git 
 - gcc
+- make
+- libtool
 - python3
   - pip
   - build 
 - python3-devel
-- make
+
+And any dependencies not listed here but found in: [yaml/libyaml](https://github.com/yaml/libyaml).
 
 ## Build instructions 
 Use the `build.sh` script to make sure necessary submodules are cloned and setup correctly:
