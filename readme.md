@@ -15,6 +15,15 @@ The following system dependencies are required:
 - python3-devel
 - make
 
+## Build instructions 
+Use the `build.sh` script to make sure necessary submodules are cloned and setup correctly:
+
+```
+
+./build.sh 
+
+```
+
 ## Usage
 To get started, install bulgogi using pip:
 ```
