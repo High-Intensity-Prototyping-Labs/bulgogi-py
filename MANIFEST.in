@@ -1,2 +1,2 @@
-recursive-include bulgogi/libyaml/*
-include bulgogi/Makefile
+include bulgogi/lib/libyaml.a
+include bulgogi/inc/*
