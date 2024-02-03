@@ -12,6 +12,12 @@
 
 git submodule init bulgogi 
 git submodule update bulgogi
+
+cd bulgogi 
+git submodule init libyaml 
+git submodule update libyaml
+cd ..
+
 python3 setup.py build_ext
 
 python3 -m build
