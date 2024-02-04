@@ -4,9 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bulgogi_amellalalex"
-version = "0.0.3"
+version = "0.0.4"
 dependencies = [
-        "wheel",
 ]
 authors = [
         { name="Alex Amellal", email="bulgogi@alexamellal.com" },
