@@ -1,3 +1,2 @@
 include bulgogi/lib/libyaml.a
 include bulgogi/inc/*
-recursive-include bulgogi/libyaml/** *
