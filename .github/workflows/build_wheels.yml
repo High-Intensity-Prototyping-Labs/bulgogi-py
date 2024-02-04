@@ -1,7 +1,9 @@
 name: Build
 
-on: 
-  tag: "*.*.*"
+on:
+  push:
+    tags: 
+      - "*.*.*"
 
 jobs:
   build_wheels:
