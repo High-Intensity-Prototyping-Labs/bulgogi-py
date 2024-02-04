@@ -5,7 +5,18 @@ The Python interface for [bulgogi](https://github.com/high-intensity-prototyping
 1. Rather than write a CLI from scratch, using a scripting language _as the interface_ seemed cool and appropriate for this project.
 2. Build configurations are slow-changing and repititious, making scripts ideal for the job.
 
-## Build dependencies 
+## Installation 
+To get started, install bulgogi using pip:
+```
+pip install bulgogi 
+```
+
+Once installed at the user-level, use it in your latest build project.
+
+## Building from scratch 
+If your development platform is unlucky enough to be missing a compatible pre-built wheel distribution, the following instructions can be used to build the Python package from source.
+
+### Build dependencies 
 The following system dependencies are required:
 - git 
 - gcc
@@ -16,24 +27,29 @@ The following system dependencies are required:
   - build 
 - python3-devel
 
-And any dependencies not listed here but found in: [yaml/libyaml](https://github.com/yaml/libyaml).
-
-## Build instructions 
-Use the `build.sh` script to make sure necessary submodules are cloned and setup correctly:
-
+### Build instructions 
+Once system dependencies are installed, install the package from the upstream git repository:
 ```
+pip install git+https://github.com/High-Intensity-Prototyping-Labs/bulgogi-py.git 
+```
+
+This should run and execute the build sequence required and install the system locally.
+
+### Build troubleshooting 
+If errors are encountered during build, an attempt at a manual build would be best for debugging purposes.
+
+Clone the `bulgogi-py` repository and run the `build.sh` script on a UNIX-like system:
+```
+git clone https://github.com/High-Intensity-Prototyping-Labs/bulgogi-py.git 
+
+cd bulgogi-py 
 
 ./build.sh 
-
 ```
+
+With a careful eye and enough experience, the verbose build output should yield useful information to troubleshoot issues.
 
 ## Usage
-To get started, install bulgogi using pip:
-```
-pip install --user bulgogi 
-```
-
-Once installed at the user-level, use it in your latest build project.
 
 ### 1. Create `setup.py`
 First create the `setup.py` file in the root of your build project and declare your project:
