@@ -1,11 +1,11 @@
 # bulgogi-py
 The Python interface for [bulgogi](https://github.com/high-intensity-prototyping-labs/bulgogi).
 
-## Motive
+# Motive
 1. Rather than write a CLI from scratch, using a scripting language _as the interface_ seemed cool and appropriate for this project.
 2. Build configurations are slow-changing and repititious, making scripts ideal for the job.
 
-## Installation 
+# Installation 
 To get started, install bulgogi using pip:
 ```
 pip install bulgogi 
@@ -49,9 +49,9 @@ cd bulgogi-py
 
 With a careful eye and enough experience, the verbose build output should yield useful information to troubleshoot issues.
 
-## Usage
+# Usage
 
-### 1. Create `setup.py`
+## 1. Create `setup.py`
 First create the `setup.py` file in the root of your build project and declare your project:
 
 ```py 
@@ -65,7 +65,7 @@ bul.set_version('v1.0.0')
 
 ```
 
-### 2. Declare targets 
+## 2. Declare targets 
 The next step is to declare targets based on your project layout:
 
 ```py
@@ -79,7 +79,7 @@ execute = bul.add_target('execute', bul.EXE)
 
 ```
 
-### 3. Declare relations
+## 3. Declare relations
 Targets need to be linked in some kind of way. This is usually referred to as 'dependency linking'.
 
 In the Python interface for bulgogi, dependencies are linked by target ID:
@@ -94,7 +94,7 @@ bul.add_target_dep(execute, target1)
 
 ```
 
-### 4. Commit the setup 
+## 4. Commit the setup 
 Lastly, the build configuration must be commit to disk before it can be built:
 
 ```py 
@@ -204,4 +204,5 @@ for target in targets:
 bul.commit()
 ```
 
-TODO: Complete section and make it accurate / stop inventing stuff.
+# License
+<p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/High-Intensity-Prototyping-Labs/bulgogi">bulgogi-py</a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://github.com/amellalalex">Alex Amellal</a> is licensed under <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"></a></p>
