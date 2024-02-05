@@ -1,4 +1,5 @@
 # bulgogi-py
+[![Build](https://github.com/High-Intensity-Prototyping-Labs/bulgogi-py/actions/workflows/build_wheels.yml/badge.svg)](https://github.com/High-Intensity-Prototyping-Labs/bulgogi-py/actions/workflows/build_wheels.yml)
 The Python interface for [bulgogi](https://github.com/high-intensity-prototyping-labs/bulgogi).
 
 # Motive
