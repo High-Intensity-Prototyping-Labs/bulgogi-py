@@ -35,4 +35,4 @@ py-modules = []
 [tool.setuptools_scm]
 
 [tool.cibuildwheel]
-before-all = "./build.sh"
+before-all = "./gitinit.sh"
