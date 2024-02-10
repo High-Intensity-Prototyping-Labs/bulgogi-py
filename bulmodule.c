@@ -1,9 +1,10 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include <string.h>
 
-#include "bulgogi/inc/dot_bul.h"
+#include "bulgogi/inc/core.h"
 
-static PyObject *bul_system(PyObject *self, PyObject *args) {
+static PyObject *bul_py_system(PyObject *self, PyObject *args) {
         const char *command;
         int sts;
 
@@ -14,31 +15,25 @@ static PyObject *bul_system(PyObject *self, PyObject *args) {
         return PyLong_FromLong(sts);
 }
 
-static PyObject *bul_init(PyObject *self, PyObject *args) {
-        bul_dot_init();
+static PyObject *bul_py_core_from_file(PyObject *self, PyObject *args) {
+        FILE *file = NULL;
+        bul_core_s core;
+        const char *filename;
+        char *build_str = NULL;
 
-        Py_INCREF(Py_None);
-        return Py_None;
-}
-
-static PyObject *bul_add_target(PyObject *self, PyObject *args) {
-        bul_name_t name = NULL;
-        bul_usage_t usage = BUL_EXE;
-        bul_id_t id = UINT_MAX;
-
-        if(!PyArg_ParseTuple(args, "sI", &name, &usage)) {
+        if(!PyArg_ParseTuple(args, "s", &filename)) {
                 return NULL;
         }
 
-        id = bul_dot_add_target(name, usage);
+        if(!(file = fopen(filename, "rb"))) {
+                return NULL;
+        }
 
-        return PyLong_FromUnsignedLong(id);
+        return NULL;
 }
 
 static PyMethodDef BulMethods[] = {
-        {"system", bul_system, METH_VARARGS, "Execute a shell command."},
-        {"init", bul_init, METH_NOARGS, "Initializes the bulgogi project directory."},
-        {"add_target", bul_add_target, METH_VARARGS, "Adds a target to the project and returns its ID."},
+        {"system", bul_py_system, METH_VARARGS, "Execute a shell command."},
         {NULL, NULL, 0, NULL},
 };
 
