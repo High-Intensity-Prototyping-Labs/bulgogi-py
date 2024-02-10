@@ -21,9 +21,9 @@ static PyObject *bul_py_core_from_file(PyObject *self, PyObject *args) {
         FILE       *file      = NULL;
         const char *filename  = NULL;
         char       *build_str = NULL;
-        PyObject   *dict      = NULL;
-        PyObject   *next_str  = NULL;
-        PyObject   *next_list = NULL;
+        PyObject   *core_dict = NULL;
+        PyObject   *target_dict = NULL;
+        PyObject   *deps_dict = NULL;
         bul_id_t   dep_id     = BUL_MAX_ID;
 
 
@@ -39,21 +39,24 @@ static PyObject *bul_py_core_from_file(PyObject *self, PyObject *args) {
 
         fclose(file);
 
-        dict = PyDict_New();
+        core_dict = PyDict_New();
+
         for(size_t x = 0; x < core.size; x++) {
-                next_list = PyList_New(core.targets[x].size);
+                target_dict = PyDict_New();
 
                 for(size_t y = 0; y < core.targets[x].size; y++) {
                         dep_id = core.targets[x].deps[y];
-                        next_str = PyUnicode_FromString(core.targets[dep_id].name);
+                        deps_dict = PyDict_New();
 
-                        PyList_SetItem(next_list, y, next_str);
+                        PyDict_SetItemString(target_dict, core.targets[dep_id].name, deps_dict);
+
+                        Py_DecRef(deps_dict);
                 }
 
-                PyDict_SetItemString(dict, core.targets[x].name, next_list);
+                PyDict_SetItemString(core_dict, core.targets[x].name, target_dict);
         }
 
-        return dict;
+        return core_dict;
 }
 
 static PyMethodDef BulMethods[] = {
