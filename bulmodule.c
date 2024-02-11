@@ -12,9 +12,20 @@ typedef struct {
         int number;
 } CustomObject;
 
+typedef struct bul_py_core {
+        PyObject_HEAD
+        bul_core_s core;
+} Core;
+
 static PyObject *
 Custom_add_one(CustomObject *self, PyObject *Py_UNUSED(ignored)) {
         self->number += 1;
+
+        Py_RETURN_NONE;
+}
+
+static PyObject *
+Core_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
 
         Py_RETURN_NONE;
 }
@@ -29,6 +40,11 @@ static PyMethodDef Custom_methods[] = {
         {NULL},
 };
 
+static PyMethodDef Core_methods[] = {
+        {"targets", (PyCFunction) Core_targets, METH_NOARGS, "Retrieves the list of targets at the DOCUMENT root"},
+        {NULL},
+};
+
 static PyTypeObject CustomType = {
         .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
         .tp_name = "bul.Custom",
@@ -39,6 +55,17 @@ static PyTypeObject CustomType = {
         .tp_new = PyType_GenericNew,
         .tp_members = Custom_members,
         .tp_methods = Custom_methods,
+};
+
+static PyTypeObject CoreType {
+        .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
+        .tp_name = "bul.Core",
+        .tp_doc  = PyDoc_STR("Bulgogi Core Object"),
+        .tp_basicsize = sizeof(Core),
+        .itemsize = 0,
+        .tp_flags = Py_TPFLAGS_DEFAULT,
+        .tp_new = PyType_GenericNew,
+        .tp_methods = Core_methods,
 };
 
 static PyObject *bul_py_system(PyObject *self, PyObject *args) {
@@ -118,6 +145,10 @@ PyMODINIT_FUNC PyInit_bulgogi(void) {
                 return NULL;
         }
 
+        if(PyType_Ready(&CoreType) < 0) {
+                return NULL;
+        }
+
         m = PyModule_Create(&bulmodule);
         if(m == NULL) {
                 return NULL;
@@ -126,6 +157,13 @@ PyMODINIT_FUNC PyInit_bulgogi(void) {
         Py_INCREF(&CustomType);
         if(PyModule_AddObject(m, "Custom", (PyObject*) &CustomType) < 0) {
                 Py_DECREF(&CustomType);
+                Py_DECREF(m);
+                return NULL;
+        }
+
+        Py_INCREF(&CoreType);
+        if(PyModule_AddObject(m, "Core", (PyObject*) &CoreType) < 0) {
+                Py_DECREF(&CoreType);
                 Py_DECREF(m);
                 return NULL;
         }
