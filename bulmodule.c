@@ -105,7 +105,7 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
         for(x = 0; x < self->core.size; x++) {
                 py_target = PyList_GetItem(self->py_targets, x);
 
-                py_deps = ((Target*)py_target)->py_deps;
+                py_deps = PyObject_GetAttrString(py_target, "deps");
 
                 for(y = 0; y < self->core.targets[x].size; y++) {
                         dep_id = self->core.targets[x].deps[y];
@@ -117,8 +117,8 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
                         Py_DECREF(py_dep);
                 }
 
+                Py_DECREF(py_deps);
                 Py_DECREF(py_target);
-
         }
 
         fclose(file);
