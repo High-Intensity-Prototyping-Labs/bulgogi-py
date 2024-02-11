@@ -57,7 +57,7 @@ static PyTypeObject CustomType = {
         .tp_methods = Custom_methods,
 };
 
-static PyTypeObject CoreType {
+static PyTypeObject CoreType = {
         .ob_base      = PyVarObject_HEAD_INIT(NULL, 0)
         .tp_name      = "bul.Core",
         .tp_doc       = PyDoc_STR("Bulgogi Core Object"),
