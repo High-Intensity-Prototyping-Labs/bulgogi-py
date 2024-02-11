@@ -193,6 +193,11 @@ static PyMethodDef Core_methods[] = {
         {NULL},
 };
 
+static PyMemberDef Target_members[] = {
+        {"name", T_STRING, offsetof(Target, target.name), 0, "Target Name"},
+        {NULL},
+};
+
 static PyTypeObject CustomType = {
         .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
         .tp_name = "bul.Custom",
@@ -228,6 +233,7 @@ static PyTypeObject TargetType = {
         .tp_new       = Target_new,
         .tp_init      = (initproc) Target_init,
         .tp_dealloc   = (destructor) Target_dealloc,
+        .tp_members   = Target_members,
 };
 
 static PyObject *bul_py_system(PyObject *self, PyObject *args) {
