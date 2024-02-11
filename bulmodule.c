@@ -151,7 +151,9 @@ static PyObject *bul_py_core_from_file(PyObject *self, PyObject *args) {
                 return NULL;
         }
 
-        core = bul_core_from_file(file);
+        core = bul_core_init();
+
+        bul_core_from_file(&core, file);
 
         fclose(file);
 
