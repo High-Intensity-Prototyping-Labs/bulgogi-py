@@ -120,7 +120,6 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
 
                 py_deps = PyObject_GetAttrString(py_target, "deps");
                 if(!py_deps) {
-                        Py_DECREF(py_target);
                         return -1;
                 }
 
@@ -130,12 +129,9 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
                         py_dep = PyList_GetItem(self->py_targets, dep_id);
 
                         PyList_Append(py_deps, py_dep);
-
-                        Py_DECREF(py_dep);
                 }
 
                 Py_DECREF(py_deps);
-                Py_DECREF(py_target);
         }
 
         fclose(file);
