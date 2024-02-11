@@ -95,11 +95,6 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
                 py_args = Py_BuildValue("Is", self->core.targets[x].id, self->core.targets[x].name);
                 py_target = PyObject_CallObject((PyObject*)&TargetType, py_args);
 
-                // DEBUG:
-                if(!PyObject_TypeCheck(py_target, &TargetType)) {
-                        printf("TYPE ERROR :: py_target != TargetType\n");
-                }
-
                 PyList_Append(self->py_targets, py_target);
 
                 Py_DECREF(py_args);
@@ -111,11 +106,6 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
                 py_target = PyList_GetItem(self->py_targets, x);
                 if(!py_target) {
                         return -1;
-                }
-
-                // DEBUG:
-                if(!PyObject_TypeCheck(py_target, &TargetType)) {
-                        printf("TYPE ERROR :: py_target != TargetType\n");
                 }
 
                 py_deps = PyObject_GetAttrString(py_target, "deps");
