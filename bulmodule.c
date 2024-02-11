@@ -16,16 +16,16 @@ static PyObject *bul_py_system(PyObject *self, PyObject *args) {
 }
 
 static PyObject *bul_py_core_from_file(PyObject *self, PyObject *args) {
-        bul_core_s core;
+        PyObject   *core_py   = NULL;
+        PyObject   *dep_list  = NULL;
+        PyObject   *dep_str   = NULL;
+
         size_t     x, y;
-        FILE       *file      = NULL;
-        const char *filename  = NULL;
-        char       *build_str = NULL;
-        PyObject   *core_dict = NULL;
-        PyObject   *target_dict = NULL;
-        PyObject   *deps_dict = NULL;
+        bul_core_s core;
         bul_id_t   dep_id     = BUL_MAX_ID;
 
+        FILE       *file      = NULL;
+        const char *filename  = NULL;
 
         if(!PyArg_ParseTuple(args, "s", &filename)) {
                 return NULL;
@@ -39,24 +39,25 @@ static PyObject *bul_py_core_from_file(PyObject *self, PyObject *args) {
 
         fclose(file);
 
-        core_dict = PyDict_New();
+        core_py = PyDict_New();
 
-        for(size_t x = 0; x < core.size; x++) {
-                target_dict = PyDict_New();
+        for(x = 0; x < core.size; x++) {
+                dep_list = PyList_New(core.targets[x].size);
 
-                for(size_t y = 0; y < core.targets[x].size; y++) {
+                for(y = 0; y < core.targets[x].size; y++) {
                         dep_id = core.targets[x].deps[y];
-                        deps_dict = PyDict_New();
 
-                        PyDict_SetItemString(target_dict, core.targets[dep_id].name, deps_dict);
+                        dep_str = PyUnicode_FromString(core.targets[dep_id].name);
 
-                        Py_DecRef(deps_dict);
+                        PyList_SetItem(dep_list, y, dep_str);
                 }
 
-                PyDict_SetItemString(core_dict, core.targets[x].name, target_dict);
+                PyDict_SetItemString(core_py, core.targets[x].name, dep_list);
+
+                Py_DecRef(dep_list);
         }
 
-        return core_dict;
+        return core_py;
 }
 
 static PyMethodDef BulMethods[] = {
