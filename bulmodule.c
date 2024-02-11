@@ -87,7 +87,7 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
 
         /** External */
         for(x = 0; x < self->core.size; x++) {
-                py_target = PyType_GenericNew
+                //py_target = PyType_GenericNew
         }
 
         fclose(file);
