@@ -144,10 +144,10 @@ Target_init(Target *self, PyObject *args, PyObject *kwds) {
 
 static void
 Target_dealloc(Target *self) {
-        if(self->target.name) {
-                free(self->target.name);
-                free(self->target.deps);
-        }
+        //if(self->target.name) {
+        //        free(self->target.name);
+        //        free(self->target.deps);
+        //}
         Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
