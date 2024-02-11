@@ -59,7 +59,7 @@ Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
         self->core = bul_core_init();
 
         /** External */
-        self->py_targets = PyList_New(0);
+        //self->py_targets = PyList_New(0);
 
         return (PyObject*) self;
 }
@@ -144,10 +144,10 @@ Target_init(Target *self, PyObject *args, PyObject *kwds) {
 
 static void
 Target_dealloc(Target *self) {
-        //if(self->target.name) {
-        //        free(self->target.name);
-        //        free(self->target.deps);
-        //}
+        if(self->target.name) {
+                free(self->target.name);
+                free(self->target.deps);
+        }
         Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
@@ -313,6 +313,10 @@ PyMODINIT_FUNC PyInit_bulgogi(void) {
         }
 
         if(PyType_Ready(&CoreType) < 0) {
+                return NULL;
+        }
+
+        if(PyType_Ready(&TargetType) < 0) {
                 return NULL;
         }
 
