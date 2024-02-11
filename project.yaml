@@ -1,0 +1,12 @@
+- target1:
+    - src:
+        - 'MANTIS-EPS/src/*.c'
+        - 'MANTIS-EPS/src/extra/*.cpp'
+    - inc:
+        - 'MANTIS-EPS/inc/**.h'
+
+- target2:
+    - dep:
+        - target1
+    - src:
+        - 'src/main.c'
