@@ -59,7 +59,7 @@ Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
         self->core = bul_core_init();
 
         /** External */
-        //self->py_targets = PyList_New(0);
+        self->py_targets = PyList_New(0);
 
         return (PyObject*) self;
 }
@@ -98,6 +98,7 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
 static void
 Core_dealloc(Core *self) {
         bul_core_free(&self->core);
+        Py_DECREF(self->py_targets);
         Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
