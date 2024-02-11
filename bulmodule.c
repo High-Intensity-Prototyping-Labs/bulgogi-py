@@ -208,6 +208,7 @@ Core_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
         int done;
         size_t x;
         PyObject *name = NULL;
+        PyObject *targets = NULL;
         PyObject *document = NULL;
         PyObject *next_item = NULL;
 
@@ -235,7 +236,12 @@ Core_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
         /* loop should typically find DOCUMENT in the first iteration */
 
         if(document) {
-                return document;
+                targets = PyObject_GetAttrString(document, "deps");
+                if(!targets) {
+                        return NULL;
+                }
+
+                return targets;
         } else {
                 Py_RETURN_NONE;
         }
