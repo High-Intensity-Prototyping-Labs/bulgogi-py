@@ -18,8 +18,57 @@ typedef struct bul_py_core {
 } Core;
 
 static PyObject *
+Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
+        Core *self;
+
+        self = (Core*) type->tp_alloc(type, 0);
+        if(self == NULL) {
+                return NULL;
+        }
+
+        self->core = bul_core_init();
+
+        return (PyObject*) self;
+}
+
+static int
+Core_init(Core *self, PyObject *args, PyObject *kwds) {
+        static char *kwlist[] = {"from_file", NULL};
+        char* filename = NULL;
+        FILE *file = NULL;
+
+        // TODO: Make the =from_file= optional one day.
+        if(!PyArg_ParseTupleAndKeywords(args, kwds, "s", &filename)) {
+                return -1;
+        }
+
+        file = fopen(filename, "rb");
+        if(!file) {
+                return -1;
+        }
+
+        bul_core_from_file(&self->core, file);
+
+        fclose(file);
+
+        return 0;
+}
+
+static void
+Core_dealloc(Core *self) {
+        bul_core_free(&self->core);
+        Py_TYPE(self)->tp_free((PyObject*) self);
+}
+
+static PyObject *
 Custom_add_one(CustomObject *self, PyObject *Py_UNUSED(ignored)) {
         self->number += 1;
+
+        Py_RETURN_NONE;
+}
+
+static PyObject *
+Core_raw_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
 
         Py_RETURN_NONE;
 }
@@ -41,7 +90,8 @@ static PyMethodDef Custom_methods[] = {
 };
 
 static PyMethodDef Core_methods[] = {
-        {"targets", (PyCFunction) Core_targets, METH_NOARGS, "Retrieves the list of targets at the DOCUMENT root"},
+        {"raw_targets", (PyCFunction) Core_raw_targets, METH_NOARGS, "Retrieves the list of *all* core targets."},
+        {"targets", (PyCFunction) Core_targets, METH_NOARGS, "Retrieves the list of targets at the DOCUMENT root."},
         {NULL},
 };
 
@@ -64,7 +114,9 @@ static PyTypeObject CoreType = {
         .tp_basicsize = sizeof(Core),
         .tp_itemsize  = 0,
         .tp_flags     = Py_TPFLAGS_DEFAULT,
-        .tp_new       = PyType_GenericNew,
+        .tp_new       = Core_new,
+        .tp_init      = (initproc) Core_init,
+        .tp_dealloc   = (destructor) Core_dealloc,
         .tp_methods   = Core_methods,
 };
 
