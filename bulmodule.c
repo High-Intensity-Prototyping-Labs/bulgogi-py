@@ -1,12 +1,21 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include <structmember.h>
+
 #include <string.h>
+#include <stddef.h>
 
 #include "bulgogi/inc/core.h"
 
 typedef struct {
         PyObject_HEAD
+        int number;
 } CustomObject;
+
+static PyMemberDef Custom_members[] = {
+        {"number", T_INT, offsetof(CustomObject, number), 0, "custom number"},
+        {NULL},
+};
 
 static PyTypeObject CustomType = {
         .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
@@ -16,6 +25,7 @@ static PyTypeObject CustomType = {
         .tp_itemsize = 0,
         .tp_flags = Py_TPFLAGS_DEFAULT,
         .tp_new = PyType_GenericNew,
+        .tp_members = Custom_members,
 };
 
 static PyObject *bul_py_system(PyObject *self, PyObject *args) {
