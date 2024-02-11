@@ -4,6 +4,20 @@
 
 #include "bulgogi/inc/core.h"
 
+typedef struct {
+        PyObject_HEAD
+} CustomObject;
+
+static PyTypeObject CustomType = {
+        .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
+        .tp_name = "bul.Custom",
+        .tp_doc  = PyDoc_STR("A custom object"),
+        .tp_basicsize = sizeof(CustomObject),
+        .tp_itemsize = 0,
+        .tp_flags = Py_TPFLAGS_DEFAULT,
+        .tp_new = PyType_GenericNew,
+};
+
 static PyObject *bul_py_system(PyObject *self, PyObject *args) {
         const char *command;
         int sts;
@@ -75,5 +89,23 @@ static struct PyModuleDef bulmodule = {
 };
 
 PyMODINIT_FUNC PyInit_bulgogi(void) {
-        return PyModule_Create(&bulmodule);
+        PyObject *m = NULL;
+
+        if(PyType_Ready(&CustomType) < 0) {
+                return NULL;
+        }
+
+        m = PyModule_Create(&bulmodule);
+        if(m == NULL) {
+                return NULL;
+        }
+
+        Py_INCREF(&CustomType);
+        if(PyModule_AddObject(m, "Custom", (PyObject*) &CustomType) < 0) {
+                Py_DECREF(&CustomType);
+                Py_DECREF(m);
+                return NULL;
+        }
+
+        return m;
 }
