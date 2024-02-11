@@ -27,6 +27,25 @@ typedef struct bul_py_target {
         bul_target_s target;
 } Target;
 
+
+/** Forward Declarations*/
+static PyObject *Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
+static int       Core_init(Core *self, PyObject *args, PyObject *kwds);
+static void      Core_dealloc(Core *self);
+
+static PyObject *Target_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
+static int       Target_init(Target *self, PyObject *args, PyObject *kwds);
+static void      Target_dealloc(Target *self);
+
+static PyObject *Custom_add_one(CustomObject *self, PyObject *Py_UNUSED(ignored));
+static PyObject *Core_raw_targets(Core *self, PyObject *Py_UNUSED(ignored));
+static PyObject *Core_targets(Core *self, PyObject *Py_UNUSED(ignored));
+static PyObject *Core_targets(Core *self, PyObject *Py_UNUSED(ignored));
+
+static PyTypeObject CustomType;
+static PyTypeObject CoreType;
+static PyTypeObject TargetType;
+
 static PyObject *
 Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
         Core *self;
@@ -45,28 +64,12 @@ Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
         return (PyObject*) self;
 }
 
-static PyObject *
-Target_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
-        Target *self;
-
-        self = (Target*) type->tp_alloc(type, 0);
-        if(self == NULL) {
-                return NULL;
-        }
-
-        self->target.id = BUL_MAX_ID;
-        self->target.name = NULL;
-        self->target.size = 0;
-        self->target.deps = NULL;
-
-        return (PyObject*) self;
-}
-
 static int
 Core_init(Core *self, PyObject *args, PyObject *kwds) {
         size_t x;
         FILE *file = NULL;
         char* filename = NULL;
+        PyObject *py_target = NULL;
         static char *kwlist[] = {"from_file", NULL};
 
         // TODO: Make the =from_file= optional one day.
@@ -84,12 +87,35 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
 
         /** External */
         for(x = 0; x < self->core.size; x++) {
-
+                py_target = PyType_GenericNew
         }
 
         fclose(file);
 
         return 0;
+}
+
+static void
+Core_dealloc(Core *self) {
+        bul_core_free(&self->core);
+        Py_TYPE(self)->tp_free((PyObject*) self);
+}
+
+static PyObject *
+Target_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
+        Target *self;
+
+        self = (Target*) type->tp_alloc(type, 0);
+        if(self == NULL) {
+                return NULL;
+        }
+
+        self->target.id = BUL_MAX_ID;
+        self->target.name = NULL;
+        self->target.size = 0;
+        self->target.deps = NULL;
+
+        return (PyObject*) self;
 }
 
 static int
@@ -114,12 +140,6 @@ Target_init(Target *self, PyObject *args, PyObject *kwds) {
         self->target = bul_target_init(id, name);
 
         return 0;
-}
-
-static void
-Core_dealloc(Core *self) {
-        bul_core_free(&self->core);
-        Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
 static void
