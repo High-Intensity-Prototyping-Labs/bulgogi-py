@@ -27,7 +27,7 @@ static PyMemberDef Custom_members[] = {
 static PyMethodDef Custom_methods[] = {
         {"add_one", (PyCFunction) Custom_add_one, METH_NOARGS, "Adds one to the number field"},
         {NULL},
-}
+};
 
 static PyTypeObject CustomType = {
         .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
