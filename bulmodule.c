@@ -168,18 +168,7 @@ Custom_add_one(CustomObject *self, PyObject *Py_UNUSED(ignored)) {
 
 static PyObject *
 Core_raw_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
-        size_t x;
-        PyObject *list = NULL;
-        bul_target_s *target = NULL;
-
-        list = PyList_New(self->core.size);
-
-        for(x = 0; x < self->core.size; x++) {
-                target = &self->core.targets[x];
-
-        }
-
-        Py_RETURN_NONE;
+        return self->py_targets;
 }
 
 static PyObject *
@@ -195,11 +184,6 @@ static PyMemberDef Custom_members[] = {
 
 static PyMethodDef Custom_methods[] = {
         {"add_one", (PyCFunction) Custom_add_one, METH_NOARGS, "Adds one to the number field"},
-        {NULL},
-};
-
-static PyMemberDef Core_members[] = {
-        {"targets", T_OBJECT, offsetof(Core, py_targets), 0, "list of targets"},
         {NULL},
 };
 
