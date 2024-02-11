@@ -194,6 +194,8 @@ static PyMethodDef Core_methods[] = {
 };
 
 static PyMemberDef Target_members[] = {
+        {"id", T_INT, offsetof(Target, target.id), 0, "Target ID"},
+        {"size", T_INT, offsetof(Target, target.size), 0, "Target Size (Number of deps)"},
         {"name", T_STRING, offsetof(Target, target.name), 0, "Target Name"},
         {NULL},
 };
