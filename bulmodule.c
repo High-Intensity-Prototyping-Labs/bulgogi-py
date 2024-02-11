@@ -14,8 +14,18 @@ typedef struct {
 
 typedef struct bul_py_core {
         PyObject_HEAD
+        /** Public */
+        PyObject *py_targets;
+        /** Internal */
         bul_core_s core;
 } Core;
+
+typedef struct bul_py_target {
+        PyObject_HEAD
+        /** Public */
+        /** Internal */
+        bul_target_s target;
+} Target;
 
 static PyObject *
 Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
@@ -26,16 +36,38 @@ Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
                 return NULL;
         }
 
+        /** Internal */
         self->core = bul_core_init();
+
+        /** External */
+        self->py_targets = PyList_New(0);
+
+        return (PyObject*) self;
+}
+
+static PyObject *
+Target_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
+        Target *self;
+
+        self = (Target*) type->tp_alloc(type, 0);
+        if(self == NULL) {
+                return NULL;
+        }
+
+        self->target.id = BUL_MAX_ID;
+        self->target.name = NULL;
+        self->target.size = 0;
+        self->target.deps = NULL;
 
         return (PyObject*) self;
 }
 
 static int
 Core_init(Core *self, PyObject *args, PyObject *kwds) {
-        static char *kwlist[] = {"from_file", NULL};
-        char* filename = NULL;
+        size_t x;
         FILE *file = NULL;
+        char* filename = NULL;
+        static char *kwlist[] = {"from_file", NULL};
 
         // TODO: Make the =from_file= optional one day.
         if(!PyArg_ParseTupleAndKeywords(args, kwds, "s", kwlist, &filename)) {
@@ -47,9 +79,39 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
                 return -1;
         }
 
+        /** Internal */
         bul_core_from_file(&self->core, file);
 
+        /** External */
+        for(x = 0; x < self->core.size; x++) {
+
+        }
+
         fclose(file);
+
+        return 0;
+}
+
+static int
+Target_init(Target *self, PyObject *args, PyObject *kwds) {
+        char *name = NULL;
+        bul_id_t id = BUL_MAX_ID;
+        static char *kwlist[] = {"id", "name", NULL};
+
+        if(!PyArg_ParseTupleAndKeywords(args, kwds, "Is", kwlist, &id, &name)) {
+                return -1;
+        }
+
+        if(id == BUL_MAX_ID) {
+                return -1;
+        }
+
+        if(!name) {
+                return -1;
+        }
+
+        /** Internal */
+        self->target = bul_target_init(id, name);
 
         return 0;
 }
@@ -57,6 +119,15 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
 static void
 Core_dealloc(Core *self) {
         bul_core_free(&self->core);
+        Py_TYPE(self)->tp_free((PyObject*) self);
+}
+
+static void
+Target_dealloc(Target *self) {
+        if(self->target.name) {
+                free(self->target.name);
+                free(self->target.deps);
+        }
         Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
@@ -69,6 +140,16 @@ Custom_add_one(CustomObject *self, PyObject *Py_UNUSED(ignored)) {
 
 static PyObject *
 Core_raw_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
+        size_t x;
+        PyObject *list = NULL;
+        bul_target_s *target = NULL;
+
+        list = PyList_New(self->core.size);
+
+        for(x = 0; x < self->core.size; x++) {
+                target = &self->core.targets[x];
+
+        }
 
         Py_RETURN_NONE;
 }
@@ -118,6 +199,18 @@ static PyTypeObject CoreType = {
         .tp_init      = (initproc) Core_init,
         .tp_dealloc   = (destructor) Core_dealloc,
         .tp_methods   = Core_methods,
+};
+
+static PyTypeObject TargetType = {
+        .ob_base      = PyVarObject_HEAD_INIT(NULL, 0)
+        .tp_name      = "bul.Target",
+        .tp_doc       = PyDoc_STR("Bulgogi Target Object"),
+        .tp_basicsize = sizeof(Target),
+        .tp_itemsize  = 0,
+        .tp_flags     = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+        .tp_new       = Target_new,
+        .tp_init      = (initproc) Target_init,
+        .tp_dealloc   = (destructor) Target_dealloc,
 };
 
 static PyObject *bul_py_system(PyObject *self, PyObject *args) {
@@ -218,6 +311,13 @@ PyMODINIT_FUNC PyInit_bulgogi(void) {
         Py_INCREF(&CoreType);
         if(PyModule_AddObject(m, "Core", (PyObject*) &CoreType) < 0) {
                 Py_DECREF(&CoreType);
+                Py_DECREF(m);
+                return NULL;
+        }
+
+        Py_INCREF(&TargetType);
+        if(PyModule_AddObject(m, "Target", (PyObject*) &TargetType) < 0) {
+                Py_DECREF(&TargetType);
                 Py_DECREF(m);
                 return NULL;
         }
