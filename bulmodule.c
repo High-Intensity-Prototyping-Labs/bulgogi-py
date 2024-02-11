@@ -205,8 +205,40 @@ Core_raw_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
 
 static PyObject *
 Core_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
+        int done;
+        size_t x;
+        PyObject *name = NULL;
+        PyObject *document = NULL;
+        PyObject *next_item = NULL;
 
-        Py_RETURN_NONE;
+        done = 0;
+        for(x = 0; x < self->core.size; x++) {
+                next_item = PyList_GetItem(self->py_targets, x);
+
+                name = PyObject_GetAttrString(next_item, "name");
+                if(!name) {
+                        return NULL;
+                }
+
+                if(strcmp(PyUnicode_DATA(name), "DOCUMENT") == 0) {
+                        document = next_item;
+                        done = 1;
+                /* Ensures `name` is freed */
+                }
+
+                Py_DECREF(name);
+
+                if(done) {
+                        break;
+                }
+        }
+        /* loop should typically find DOCUMENT in the first iteration */
+
+        if(document) {
+                return document;
+        } else {
+                Py_RETURN_NONE;
+        }
 }
 
 static PyMemberDef Custom_members[] = {
