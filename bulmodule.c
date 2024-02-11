@@ -104,8 +104,15 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
         /** After all raw targets initialized */
         for(x = 0; x < self->core.size; x++) {
                 py_target = PyList_GetItem(self->py_targets, x);
+                if(!py_target) {
+                        return -1;
+                }
 
                 py_deps = PyObject_GetAttrString(py_target, "deps");
+                if(!py_deps) {
+                        Py_DECREF(py_target);
+                        return -1;
+                }
 
                 for(y = 0; y < self->core.targets[x].size; y++) {
                         dep_id = self->core.targets[x].deps[y];
