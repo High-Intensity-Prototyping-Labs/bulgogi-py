@@ -58,14 +58,14 @@ static PyTypeObject CustomType = {
 };
 
 static PyTypeObject CoreType {
-        .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
-        .tp_name = "bul.Core",
-        .tp_doc  = PyDoc_STR("Bulgogi Core Object"),
+        .ob_base      = PyVarObject_HEAD_INIT(NULL, 0)
+        .tp_name      = "bul.Core",
+        .tp_doc       = PyDoc_STR("Bulgogi Core Object"),
         .tp_basicsize = sizeof(Core),
-        .itemsize = 0,
-        .tp_flags = Py_TPFLAGS_DEFAULT,
-        .tp_new = PyType_GenericNew,
-        .tp_methods = Core_methods,
+        .tp_itemsize  = 0,
+        .tp_flags     = Py_TPFLAGS_DEFAULT,
+        .tp_new       = PyType_GenericNew,
+        .tp_methods   = Core_methods,
 };
 
 static PyObject *bul_py_system(PyObject *self, PyObject *args) {
