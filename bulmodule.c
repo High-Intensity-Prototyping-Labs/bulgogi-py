@@ -113,6 +113,11 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
                         return -1;
                 }
 
+                // DEBUG:
+                if(!PyObject_TypeCheck(py_target, &TargetType)) {
+                        printf("TYPE ERROR :: py_target != TargetType\n");
+                }
+
                 py_deps = PyObject_GetAttrString(py_target, "deps");
                 if(!py_deps) {
                         Py_DECREF(py_target);
