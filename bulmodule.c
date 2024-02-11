@@ -196,6 +196,7 @@ Custom_add_one(CustomObject *self, PyObject *Py_UNUSED(ignored)) {
 
 static PyObject *
 Core_raw_targets(Core *self, PyObject *Py_UNUSED(ignored)) {
+        Py_INCREF(self->py_targets);
         return self->py_targets;
 }
 
