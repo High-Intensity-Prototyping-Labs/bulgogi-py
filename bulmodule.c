@@ -16,7 +16,7 @@ static PyObject *
 Custom_add_one(CustomObject *self, PyObject *Py_UNUSED(ignored)) {
         self->number += 1;
 
-        return NULL;
+        Py_RETURN_NONE;
 }
 
 static PyMemberDef Custom_members[] = {
