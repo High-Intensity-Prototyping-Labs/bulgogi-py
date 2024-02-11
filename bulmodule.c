@@ -23,6 +23,7 @@ typedef struct bul_py_core {
 typedef struct bul_py_target {
         PyObject_HEAD
         /** Public */
+        PyObject *py_deps;
         /** Internal */
         bul_target_s target;
 } Target;
@@ -66,10 +67,13 @@ Core_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static int
 Core_init(Core *self, PyObject *args, PyObject *kwds) {
-        size_t x;
+        size_t x, y;
         FILE *file = NULL;
         char* filename = NULL;
+        bul_id_t dep_id = BUL_MAX_ID;
+        PyObject *py_dep = NULL;
         PyObject *py_args = NULL;
+        PyObject *py_deps = NULL;
         PyObject *py_target = NULL;
         static char *kwlist[] = {"from_file", NULL};
 
@@ -95,6 +99,26 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
 
                 Py_DECREF(py_args);
                 Py_DECREF(py_target);
+        }
+
+        /** After all raw targets initialized */
+        for(x = 0; x < self->core.size; x++) {
+                py_target = PyList_GetItem(self->py_targets, x);
+
+                py_deps = ((Target*)py_target)->py_deps;
+
+                for(y = 0; y < self->core.targets[x].size; y++) {
+                        dep_id = self->core.targets[x].deps[y];
+
+                        py_dep = PyList_GetItem(self->py_targets, dep_id);
+
+                        PyList_Append(py_deps, py_dep);
+
+                        Py_DECREF(py_dep);
+                }
+
+                Py_DECREF(py_target);
+
         }
 
         fclose(file);
@@ -147,6 +171,9 @@ Target_init(Target *self, PyObject *args, PyObject *kwds) {
         /** Internal */
         self->target = bul_target_init(id, name);
 
+        /** Public */
+        self->py_deps = PyList_New(0);
+
         return 0;
 }
 
@@ -156,6 +183,7 @@ Target_dealloc(Target *self) {
                 free(self->target.name);
                 free(self->target.deps);
         }
+        Py_DECREF(self->py_deps);
         Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
@@ -197,6 +225,7 @@ static PyMemberDef Target_members[] = {
         {"id", T_INT, offsetof(Target, target.id), 0, "Target ID"},
         {"size", T_INT, offsetof(Target, target.size), 0, "Target Size (Number of deps)"},
         {"name", T_STRING, offsetof(Target, target.name), 0, "Target Name"},
+        {"deps", T_OBJECT, offsetof(Target, py_deps), 0, "Target Dependencies"},
         {NULL},
 };
 
