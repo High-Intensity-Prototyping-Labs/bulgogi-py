@@ -216,7 +216,6 @@ static PyTypeObject CoreType = {
         .tp_init      = (initproc) Core_init,
         .tp_dealloc   = (destructor) Core_dealloc,
         .tp_methods   = Core_methods,
-        .tp_members   = Core_members,
 };
 
 static PyTypeObject TargetType = {
