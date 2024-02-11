@@ -12,10 +12,22 @@ typedef struct {
         int number;
 } CustomObject;
 
+static PyObject *
+Custom_add_one(CustomObject *self, PyObject *Py_UNUSED(ignored)) {
+        self->number += 1;
+
+        return NULL;
+}
+
 static PyMemberDef Custom_members[] = {
         {"number", T_INT, offsetof(CustomObject, number), 0, "custom number"},
         {NULL},
 };
+
+static PyMethodDef Custom_methods[] = {
+        {"add_one", (PyCFunction) Custom_add_one, METH_NOARGS, "Adds one to the number field"},
+        {NULL},
+}
 
 static PyTypeObject CustomType = {
         .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
@@ -26,6 +38,7 @@ static PyTypeObject CustomType = {
         .tp_flags = Py_TPFLAGS_DEFAULT,
         .tp_new = PyType_GenericNew,
         .tp_members = Custom_members,
+        .tp_methods = Custom_methods,
 };
 
 static PyObject *bul_py_system(PyObject *self, PyObject *args) {
