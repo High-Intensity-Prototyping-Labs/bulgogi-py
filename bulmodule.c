@@ -69,6 +69,7 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
         size_t x;
         FILE *file = NULL;
         char* filename = NULL;
+        PyObject *py_args = NULL;
         PyObject *py_target = NULL;
         static char *kwlist[] = {"from_file", NULL};
 
@@ -87,7 +88,13 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
 
         /** External */
         for(x = 0; x < self->core.size; x++) {
-                //py_target = PyType_GenericNew
+                py_args = Py_BuildValue("Is", self->core.targets[x].id, self->core.targets[x].name);
+                py_target = PyObject_CallObject((PyObject*)&TargetType, py_args);
+
+                PyList_Append(self->py_targets, py_target);
+
+                Py_DECREF(py_args);
+                Py_DECREF(py_target);
         }
 
         fclose(file);
@@ -191,6 +198,11 @@ static PyMethodDef Custom_methods[] = {
         {NULL},
 };
 
+static PyMemberDef Core_members[] = {
+        {"targets", T_OBJECT, offsetof(Core, py_targets), 0, "list of targets"},
+        {NULL},
+};
+
 static PyMethodDef Core_methods[] = {
         {"raw_targets", (PyCFunction) Core_raw_targets, METH_NOARGS, "Retrieves the list of *all* core targets."},
         {"targets", (PyCFunction) Core_targets, METH_NOARGS, "Retrieves the list of targets at the DOCUMENT root."},
@@ -220,6 +232,7 @@ static PyTypeObject CoreType = {
         .tp_init      = (initproc) Core_init,
         .tp_dealloc   = (destructor) Core_dealloc,
         .tp_methods   = Core_methods,
+        .tp_members   = Core_members,
 };
 
 static PyTypeObject TargetType = {
