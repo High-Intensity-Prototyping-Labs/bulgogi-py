@@ -38,7 +38,7 @@ Core_init(Core *self, PyObject *args, PyObject *kwds) {
         FILE *file = NULL;
 
         // TODO: Make the =from_file= optional one day.
-        if(!PyArg_ParseTupleAndKeywords(args, kwds, "s", &filename)) {
+        if(!PyArg_ParseTupleAndKeywords(args, kwds, "s", kwlist, &filename)) {
                 return -1;
         }
 
