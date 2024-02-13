@@ -27,6 +27,7 @@ setup(
         ),
     ],
     packages=find_packages(where="bulgogi"),
-    package_dir={"": "lib"},
+    package_dir={"": "bulgogi"},
+    package_data={"lib": ["libyaml.so"]},
     include_package_data=True,
 )
