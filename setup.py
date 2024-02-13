@@ -1,4 +1,4 @@
-from setuptools import Extension, setup 
+from setuptools import Extension, find_packages, setup 
 from setuptools.command.build_ext import build_ext
 from os import system
 
@@ -25,5 +25,8 @@ setup(
             library_dirs=["bulgogi/lib"],
             libraries=["yaml"],
         ),
-    ]
+    ],
+    packages=find_packages(where="bulgogi"),
+    package_dir={"": "lib"},
+    include_package_data=True,
 )
