@@ -3,7 +3,7 @@ from setuptools.command.build_ext import build_ext
 from os import system
 
 def Make():
-    system('make -C bulgogi lib/libyaml.a')
+    system('make -C bulgogi lib/libyaml.so')
 
 class MakeBuildExt(build_ext):
     def run(self) -> None:
