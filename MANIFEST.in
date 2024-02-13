@@ -1,2 +1,0 @@
-include bulgogi/lib/libyaml.so
-include bulgogi/inc/*
