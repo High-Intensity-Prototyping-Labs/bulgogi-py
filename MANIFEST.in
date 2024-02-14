@@ -1,2 +1,2 @@
-include bulgogi/lib/*.so
+include bulgogi/lib/*.a
 include bulgogi/inc/*.h
