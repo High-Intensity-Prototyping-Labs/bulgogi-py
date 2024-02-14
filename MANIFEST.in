@@ -1,2 +1,2 @@
-include bulgogi/lib/libyaml.a
+include bulgogi/lib/*.so
 include bulgogi/inc/*.h

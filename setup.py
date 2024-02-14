@@ -3,7 +3,8 @@ from setuptools.command.build_ext import build_ext
 from os import system
 
 def Make():
-    system('make -C bulgogi lib/libyaml.a')
+    system('make -C bulgogi lib/libyaml.so')
+    system('make -C bulgogi lib/libbul.so')
 
 class MakeBuildExt(build_ext):
     def run(self) -> None:
@@ -19,15 +20,14 @@ setup(
             name="bulgogi",
             sources=[
                 "bulmodule.c", 
-                "bulgogi/src/core.c"
             ],
             include_dirs=["bulgogi/inc"],
             library_dirs=["bulgogi/lib"],
-            libraries=["yaml"],
+            libraries=["bul", "yaml"],
         ),
     ],
     packages=find_packages(where="bulgogi"),
     package_dir={"": "bulgogi"},
-    package_data={"lib": ["*.a"]},
+    package_data={"lib": ["*.so"]},
     include_package_data=True,
 )
