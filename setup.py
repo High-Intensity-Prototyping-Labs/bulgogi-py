@@ -25,8 +25,4 @@ setup(
             libraries=["bul", "yaml"],
         ),
     ],
-    packages=find_packages(where="bulgogi"),
-    package_dir={"": "bulgogi"},
-    package_data={"lib": ["*.a"]},
-    include_package_data=True,
 )
