@@ -37,3 +37,6 @@ py-modules = []
 
 [tool.cibuildwheel]
 before-all = "./gitinit.sh"
+
+[project.scripts]
+bul = "bul:cli"
