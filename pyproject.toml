@@ -31,7 +31,7 @@ Homepage = "https://bulgogi.dev"
 Issues = "https://github.com/high-intensity-prototyping-labs/bulgogi-py/issues"
 
 [tool.setuptools]
-py-modules = ['bul-cli']
+py-modules = ['bul_cli']
 
 [tool.setuptools_scm]
 
@@ -39,4 +39,4 @@ py-modules = ['bul-cli']
 before-all = "./gitinit.sh"
 
 [project.scripts]
-bul = "bul-cli:cli"
+bul = "bul_cli:cli"
