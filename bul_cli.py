@@ -11,12 +11,16 @@ def cli():
     if len(args.files) != 0:
         for file in args.files:
             core = Core(from_file=file)
+            multifile = len(args.files) > 1
 
+            if multifile:
+                print('# ' + file)
             for target in core.targets():
                 print(target.name + ' [' + str(target.id) + ']:')
                 for dep in target.deps:
                     print('  ' + dep.name + ' [' + str(dep.id) + ']')
                 print()
+
     else:
         parser.print_help()
 
